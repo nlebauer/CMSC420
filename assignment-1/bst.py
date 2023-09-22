@@ -37,7 +37,14 @@ def dump(root: Node) -> str:
 # If the key is not in the tree, insert it with a keycount of 1.
 # If the key is in the tree, increment its keycount.
 def insert(root: Node, key: int) -> Node:
-    # YOUR CODE GOES HERE.
+    if root is None: # empty tree
+        return Node(key, 1)
+    elif key == root.key: # key already in tree
+        root.keycount += 1
+    elif key < root.key: 
+        root.leftchild = insert(root.leftchild, key)
+    else: # key > root.key
+        root.rightchild = insert(root.rightchild, key)
     return root
 
 # For the tree rooted at root and the key given:
@@ -45,8 +52,32 @@ def insert(root: Node, key: int) -> Node:
 # If the key is in the tree, decrement its key count. If they keycount goes to 0, remove the key.
 # When replacement is necessary use the inorder successor.
 def delete(root: Node, key: int) -> Node:
-    # YOUR CODE GOES HERE.
+    if root is None: # empty tree
+        return root
+    elif key < root.key: 
+        root.leftchild = delete(root.leftchild, key)
+    elif key > root.key:
+        root.rightchild = delete(root.rightchild, key)
+    else: # key == root.key
+        if root.keycount > 1: # key is root and keycount > 1
+            root.keycount -= 1
+        else: # key is root and keycount == 1
+            if root.leftchild is None:
+                return root.rightchild
+            elif root.rightchild is None:
+                return root.leftchild
+            else: # root has two children, replace with inorder successor
+                root.key = inorder_successor(root.rightchild).key
+                root.rightchild = delete(root.rightchild, root.key)
     return root
+
+# Find inorder successor of node.
+# Helper method for delete.
+def inorder_successor(node: Node) -> Node:
+    if node.leftchild is None:
+        return node
+    else:
+        return inorder_successor(node.leftchild)
 
 # For the tree rooted at root and the key given:
 # Calculate the list of keys on the path from the root towards the search key.
