@@ -63,12 +63,21 @@ def delete(root: Node, key: int) -> Node:
             root.keycount -= 1
         else: # key is root and keycount == 1
             if root.leftchild is None:
-                return root.rightchild
+                temp = root.rightchild
+                root = None
+                return temp
             elif root.rightchild is None:
-                return root.leftchild
+                temp = root.leftchild
+                root = None
+                return temp
             else: # root has two children, replace with inorder successor
-                root.key = inorder_successor(root.rightchild).key
-                root.rightchild = delete(root.rightchild, root.key)
+                temp = inorder_successor(root.rightchild) # temporarily stores inorder successor
+                root.key = temp.key # replace root key with inorder successor key
+                root.keycount = temp.keycount # replace root keycount with inorder successor keycount
+                count = temp.keycount 
+                while count > 0: # deletes all instances of inorder successor
+                    root.rightchild = delete(root.rightchild, temp.key)
+                    count -= 1
     return root
 
 # Find inorder successor of node.
@@ -84,34 +93,75 @@ def inorder_successor(node: Node) -> Node:
 # The key is not guaranteed to be in the tree.
 # Return the json.dumps of the list with indent=2.
 def search(root: Node, search_key: int) -> str:
-    # YOUR CODE GOES HERE.
-    # Then tweak the next line so it uses your list rather than None.
-    return(json.dumps(None))
+    return(json.dumps(search_list(root, search_key), indent=2))
+
+# Helper method for search.
+# Generates list of keys on path from root to search_key.
+def search_list(root: Node, search_key: int) -> List[int]:
+    if root is None:
+        return []
+    elif search_key == root.key:
+        return [root.key]
+    elif search_key < root.key:
+        return [root.key] + search_list(root.leftchild, search_key)
+    else: # search_key > root.key
+        return [root.key] + search_list(root.rightchild, search_key)
 
 # For the tree rooted at root, find the preorder traversal.
 # Return the json.dumps of the list with indent=2.
 def preorder(root: Node) -> str:
-    # YOUR CODE GOES HERE.
-    # Then tweak the next line so it uses your list rather than None.
-    return(json.dumps(None))
+    return(json.dumps(preord_list(root), indent=2))
+
+# Helper for preorder.
+# Generates list of keys in preorder traversal.
+def preord_list(root: Node) -> List[int]:
+    if root is None:
+        return []
+    else:
+        return [root.key] + preord_list(root.leftchild) + preord_list(root.rightchild)
 
 # For the tree rooted at root, find the inorder traversal.
 # Return the json.dumps of the list with indent=2.
 def inorder(root: Node) -> str:
-    # YOUR CODE GOES HERE.
-    # Then tweak the next line so it uses your list rather than None.
-    return(json.dumps(None))
+    return(json.dumps(inord_list(root), indent=2))
+
+# Helper for inorder.
+# Generates list of keys in inorder traversal.
+def inord_list(root: Node) -> List[int]:
+    if root is None:
+        return []
+    else:
+        return inord_list(root.leftchild) + [root.key] + inord_list(root.rightchild)
 
 # For the tree rooted at root, find the postorder traversal.
 # Return the json.dumps of the list with indent=2.
 def postorder(root: Node) -> str:
-    # YOUR CODE GOES HERE.
-    # Then tweak the next line so it uses your list rather than None.
-    return(json.dumps(None))
+    return(json.dumps(postord_list(root), indent=2))
+
+# Helper for postorder.
+# Generates list of keys in postorder traversal.
+def postord_list(root: Node) -> List[int]:
+    if root is None:
+        return []
+    else:
+        return postord_list(root.leftchild) + postord_list(root.rightchild) + [root.key]
 
 # For the tree rooted at root, find the BFT traversal (go left-to-right).
 # Return the json.dumps of the list with indent=2.
 def bft(root: Node) -> str:
-    # YOUR CODE GOES HERE.
+    if root is None:
+        return json.dumps([])
+    else:
+        queue = [root]
+        pathlist = []
+
+        while (len(queue) > 0):
+            node = queue.pop(0)
+            pathlist.append(node.key)
+
+            if node.leftchild is not None:
+                queue.append(node.leftchild)
+            if node.rightchild is not None:
+                queue.append(node.rightchild)
     # Then tweak the next line so it uses your list rather than None.
-    return json.dumps(None)
+    return json.dumps(pathlist, indent=2)
