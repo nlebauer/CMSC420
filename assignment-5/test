@@ -1,0 +1,12 @@
+initialize,6,2
+insert,AOE,3,5,19,17,11,9
+insert,QID,11,2,13,2,3,15
+insert,ZNF,1,16,0,8,2,8
+insert,IKH,17,4,10,14,19,4
+insert,TPB,9,19,12,10,0,14
+insert,FYJ,13,3,18,0,14,11
+insert,XSH,2,11,1,11,4,5
+insert,KPF,8,10,2,9,15,18
+insert,BOR,16,12,17,1,13,19
+insert,NJQ,19,17,3,12,18,12
+knn,1,15,7,4,10,2,14
